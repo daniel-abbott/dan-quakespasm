@@ -1260,7 +1260,7 @@ void M_Options_Draw (void)
 		M_Print (16, 32 + 8*OPT_VIDEO,	"         Video Options");
 
 	if (GL_MenuDraw)
-		M_Print (16, 32 + 8 * OPT_GL_OPTIONS, "            GL Options");
+		M_Print (16, 32 + 8 * OPT_GL_OPTIONS, "      Graphics Options");
 // cursor
 	M_DrawCharacter (200, 32 + options_cursor*8, 12+((int)(realtime*4)&1));
 }
