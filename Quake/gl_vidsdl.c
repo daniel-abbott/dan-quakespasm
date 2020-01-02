@@ -35,7 +35,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #else
 #include "SDL.h"
 #endif
-#include <string.h>
 
 //ericw -- for putting the driver into multithreaded mode
 #ifdef __APPLE__
@@ -45,7 +44,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define MAX_MODE_LIST	600 //johnfitz -- was 30
 #define MAX_BPPS_LIST	5
 #define MAX_RATES_LIST	20
-#define MAX_FILTERS_LIST 6
 #define WARP_WIDTH		320
 #define WARP_HEIGHT		200
 #define MAXWIDTH		10000
@@ -161,15 +159,6 @@ static cvar_t	vid_borderless = {"vid_borderless", "0", CVAR_ARCHIVE}; // QuakeSp
 
 cvar_t		vid_gamma = {"gamma", "1", CVAR_ARCHIVE}; //johnfitz -- moved here from view.c
 cvar_t		vid_contrast = {"contrast", "1", CVAR_ARCHIVE}; //QuakeSpasm, MarkV
-
-static char* texture_filter_modes[] = {
-	"GL_NEAREST",
-	"GL_NEAREST_MIPMAP_NEAREST",
-	"GL_NEAREST_MIPMAP_LINEAR",
-	"GL_LINEAR",
-	"GL_LINEAR_MIPMAP_NEAREST",
-	"GL_LINEAR_MIPMAP_LINEAR"
-};
 
 //==========================================================================
 //
@@ -1752,7 +1741,7 @@ void	VID_Init (void)
 	vid_menucmdfn = VID_Menu_f; //johnfitz
 	vid_menudrawfn = VID_MenuDraw;
 	vid_menukeyfn = VID_MenuKey;
-
+	
 	VID_Gamma_Init(); //johnfitz
 	VID_Menu_Init(); //johnfitz
 
@@ -1866,7 +1855,6 @@ enum {
 	VID_OPT_REFRESHRATE,
 	VID_OPT_FULLSCREEN,
 	VID_OPT_VSYNC,
-	VID_OPT_TEXTUREMODE,
 	VID_OPT_TEST,
 	VID_OPT_APPLY,
 	VIDEO_OPTIONS_ITEMS
@@ -2136,41 +2124,6 @@ static void VID_Menu_ChooseNextRate (int dir)
 
 /*
 ================
-VID_Menu_ChooseNextFilter
-
-chooses next texture filtering mode in order, then updates gl_texturemode cvar
-================
-*/
-
-static void VID_Menu_ChooseNextFilter (int dir)
-{
-	int i;
-	
-	for (i = 0; i < MAX_FILTERS_LIST; i++)
-	{
-		if (strcmp(texture_filter_modes[i], Cvar_VariableString("gl_texturemode")) == 0) {
-			break;
-		}
-	}
-	
-	if (i == MAX_FILTERS_LIST)
-	{
-		i = 0;
-	}
-	else 
-	{
-		i += dir;
-		if (i >= MAX_FILTERS_LIST)
-			i = 0;
-		else if (i < 0)
-			i = MAX_FILTERS_LIST - 1;
-	}
-
-	Cvar_Set ("gl_texturemode", texture_filter_modes[i]);
-}
-
-/*
-================
 VID_MenuKey
 ================
 */
@@ -2218,9 +2171,6 @@ static void VID_MenuKey (int key)
 		case VID_OPT_VSYNC:
 			Cbuf_AddText ("toggle vid_vsync\n"); // kristian
 			break;
-		case VID_OPT_TEXTUREMODE:
-			VID_Menu_ChooseNextFilter (-1);
-			break;
 		default:
 			break;
 		}
@@ -2244,9 +2194,6 @@ static void VID_MenuKey (int key)
 			break;
 		case VID_OPT_VSYNC:
 			Cbuf_AddText ("toggle vid_vsync\n");
-			break;
-		case VID_OPT_TEXTUREMODE:
-			VID_Menu_ChooseNextFilter (1);
 			break;
 		default:
 			break;
@@ -2273,9 +2220,6 @@ static void VID_MenuKey (int key)
 			break;
 		case VID_OPT_VSYNC:
 			Cbuf_AddText ("toggle vid_vsync\n");
-			break;
-		case VID_OPT_TEXTUREMODE:
-			VID_Menu_ChooseNextFilter(-1);
 			break;
 		case VID_OPT_TEST:
 			Cbuf_AddText ("vid_test\n");
@@ -2352,10 +2296,6 @@ static void VID_MenuDraw (void)
 				M_DrawCheckbox (184, y, (int)vid_vsync.value);
 			else
 				M_Print (184, y, "N/A");
-			break;
-		case VID_OPT_TEXTUREMODE:
-			M_Print (16, y, "    Texture filter");
-			M_Print (184, y, va("%s", Cvar_VariableString("gl_texturemode")));
 			break;
 		case VID_OPT_TEST:
 			y += 8; //separate the test and apply items

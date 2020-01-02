@@ -34,6 +34,7 @@ enum m_state_e {
 	m_net,
 	m_options,
 	m_video,
+	m_gl_options,
 	m_keys,
 	m_help,
 	m_quit,
@@ -70,6 +71,7 @@ void M_DrawCharacter (int cx, int line, int num);
 void M_DrawPic (int x, int y, qpic_t *pic);
 void M_DrawTransPic (int x, int y, qpic_t *pic);
 void M_DrawCheckbox (int x, int y, int on);
+void M_DrawSlider(int x, int y, float range);
 
 #endif	/* _QUAKE_MENU_H */
 

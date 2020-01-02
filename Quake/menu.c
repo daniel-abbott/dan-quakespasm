@@ -2,6 +2,7 @@
 Copyright (C) 1996-2001 Id Software, Inc.
 Copyright (C) 2002-2009 John Fitzgibbons and others
 Copyright (C) 2010-2014 QuakeSpasm developers
+Copyright (C) 2020 Daniel Abbott
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -43,6 +44,7 @@ void M_Menu_Main_f (void);
 	void M_Menu_Options_f (void);
 		void M_Menu_Keys_f (void);
 		void M_Menu_Video_f (void);
+		void GL_Menu_f(void);
 	void M_Menu_Help_f (void);
 	void M_Menu_Quit_f (void);
 
@@ -60,6 +62,7 @@ void M_Main_Draw (void);
 	void M_Options_Draw (void);
 		void M_Keys_Draw (void);
 		void M_Video_Draw (void);
+		void GL_MenuDraw(void);
 	void M_Help_Draw (void);
 	void M_Quit_Draw (void);
 
@@ -77,6 +80,7 @@ void M_Main_Key (int key);
 	void M_Options_Key (int key);
 		void M_Keys_Key (int key);
 		void M_Video_Key (int key);
+		void GL_MenuKey(int key);
 	void M_Help_Key (int key);
 	void M_Quit_Key (int key);
 
@@ -281,8 +285,8 @@ void M_Main_Key (int key)
 		key_dest = key_game;
 		m_state = m_none;
 		cls.demonum = m_save_demonum;
-		if (!fitzmode)	/* QuakeSpasm customization: */
-			break;
+		//if (!fitzmode)	/* QuakeSpasm customization: */
+		//	break;
 		if (cls.demonum != -1 && !cls.demoplayback && cls.state != ca_connected)
 			CL_NextDemo ();
 		break;
@@ -993,7 +997,8 @@ enum
 //#ifdef _WIN32
 //	OPT_USEMOUSE,
 //#endif
-	OPT_VIDEO,	// This is the last before OPTIONS_ITEMS
+	OPT_VIDEO,
+	OPT_GL_OPTIONS,	// This is the last before OPTIONS_ITEMS
 	OPTIONS_ITEMS
 };
 
@@ -1254,6 +1259,8 @@ void M_Options_Draw (void)
 	if (vid_menudrawfn)
 		M_Print (16, 32 + 8*OPT_VIDEO,	"         Video Options");
 
+	if (GL_MenuDraw)
+		M_Print (16, 32 + 8 * OPT_GL_OPTIONS, "            GL Options");
 // cursor
 	M_DrawCharacter (200, 32 + options_cursor*8, 12+((int)(realtime*4)&1));
 }
@@ -1291,6 +1298,9 @@ void M_Options_Key (int k)
 			break;
 		case OPT_VIDEO:
 			M_Menu_Video_f ();
+			break;
+		case OPT_GL_OPTIONS:
+			GL_Menu_f();
 			break;
 		default:
 			M_AdjustSliders (1);
@@ -2549,6 +2559,7 @@ void M_Init (void)
 	Cmd_AddCommand ("menu_options", M_Menu_Options_f);
 	Cmd_AddCommand ("menu_keys", M_Menu_Keys_f);
 	Cmd_AddCommand ("menu_video", M_Menu_Video_f);
+	Cmd_AddCommand ("menu_gl_options", GL_Menu_f);
 	Cmd_AddCommand ("help", M_Menu_Help_f);
 	Cmd_AddCommand ("menu_quit", M_Menu_Quit_f);
 }
@@ -2621,17 +2632,21 @@ void M_Draw (void)
 		M_Video_Draw ();
 		break;
 
+	case m_gl_options:
+		GL_MenuDraw();
+		break;
+
 	case m_help:
 		M_Help_Draw ();
 		break;
 
 	case m_quit:
-		if (!fitzmode)
-		{ /* QuakeSpasm customization: */
-			/* Quit now! S.A. */
-			key_dest = key_console;
-			Host_Quit_f ();
-		}
+		//if (!fitzmode)
+		//{ /* QuakeSpasm customization: */
+		//	/* Quit now! S.A. */
+		//	key_dest = key_console;
+		//	Host_Quit_f ();
+		//}
 		M_Quit_Draw ();
 		break;
 
@@ -2707,6 +2722,10 @@ void M_Keydown (int key)
 
 	case m_video:
 		M_Video_Key (key);
+		return;
+
+	case m_gl_options:
+		GL_MenuKey(key);
 		return;
 
 	case m_help:
