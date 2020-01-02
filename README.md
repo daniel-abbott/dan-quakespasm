@@ -1,4 +1,4 @@
-This is just a personal version of Quakespasm, mainly for learning and hacking around. Should build with no problems with VS2017, haven't tried building with anything else or for other platforms yet so no promises.
+This is just a personal version of Quakespasm, mainly for learning and hacking around. SDL2 version should build with no problems with VS2017, haven't tried building with anything else or for other platforms yet so no promises.
 
 If you want the real Quakespasm, head to http://quakespasm.sourceforge.net
 
