@@ -3,11 +3,14 @@ This is just a personal version of Quakespasm, mainly for learning and hacking a
 If you want the real Quakespasm, head to http://quakespasm.sourceforge.net
 
 So far, changes/new features include:
-* Switch between texture filtering options in Video Options menu.
+* New GL Options submenu, currently contains:
+    * Texture filter setting
+    * Anisotropy slider (the slider is currently busted, so just prints current cvar on the right)
 
-You'll probably see some questionable C, I'm still new to the language. Feel free to open issues for anything that just looks awful/dangerous.
+You'll probably see some questionable C, I'm still new to the language (and to Quake's way of doing things). Feel free to open issues for anything that just looks awful/dangerous.
 
 Possible goals:
+* Add menu(s) with all (most?) console-only graphics options.
 * Expand on QuakeC (make new types possible, etc.)
 * Re-implement software rendering.
 * Add back in the fun classic exit messages.
