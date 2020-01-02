@@ -1,11 +1,12 @@
-This is just a personal version of Quakespasm, mainly for learning and hacking around. SDL2 version should build with no problems with VS2017, haven't tried building with anything else or for other platforms yet so no promises.
+This is just a personal version of Quakespasm, mainly for learning and hacking around. SDL2 version should build with no problems with VS2017 (MSVC), haven't tried building with anything else or for other platforms yet so no promises.
 
 If you want the real Quakespasm, head to http://quakespasm.sourceforge.net
 
 So far, changes/new features include:
-* New GL Options submenu, currently contains:
-    * Texture filter setting
+* New Graphics Options submenu, currently contains:
+    * Texture filter setting (GL_NEAREST, etc)
     * Anisotropy slider (the slider is currently busted, so just prints current cvar on the right)
+	* Particle rendering mode, can switch between None, Smooth, and Classic styles.
 
 You'll probably see some questionable C, I'm still new to the language (and to Quake's way of doing things). Feel free to open issues for anything that just looks awful/dangerous.
 
