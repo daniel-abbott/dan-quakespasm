@@ -26,6 +26,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "quakedef.h"
 #include "cfgfile.h"
 
+extern cvar_t r_lerpmodels, r_lerpmove;
+
 static char* texture_filter_modes[] = {
 	"GL_NEAREST",
 	"GL_NEAREST_MIPMAP_NEAREST",
@@ -44,6 +46,14 @@ static char* particle_styles[] = {
 };
 
 static int particle_styles_max = (int)(sizeof particle_styles / sizeof particle_styles[0]);
+
+static char* lerp_styles[] = {
+	"Off",
+	"On (except flames)",
+	"On (all)"
+};
+
+static int lerp_styles_max = (int)(sizeof lerp_styles / sizeof lerp_styles[0]);
 
 /*
 ================
@@ -102,7 +112,7 @@ static void GL_Menu_Anisotropy(int dir) {
 ================
 GL_Menu_ParticleStyle
 
-chooses style of particles, none > smooth > pixelated
+chooses style of particles, none > smooth > classic (pixelated)
 ================
 */
 static void GL_Menu_ParticleStyle(int dir)
@@ -132,9 +142,78 @@ static void GL_Menu_ParticleStyle(int dir)
 	Cvar_SetValue("r_particles", (float)i);
 }
 
+/*
+================
+GL_Menu_LerpModels
+
+Model animation smoothing, Off > On (except flames) > On (all)
+================
+*/
+//static void GL_Menu_LerpModels(int dir)
+//{
+//	int i;
+//
+//	for (i = 0; i < lerp_styles_max; i++)
+//	{
+//		if (i == r_lerpmodels.value) {
+//			break;
+//		}
+//	}
+//
+//	if (i == lerp_styles_max)
+//	{
+//		i = 0;
+//	}
+//	else
+//	{
+//		i += dir;
+//		if (i >= lerp_styles_max)
+//			i = 0;
+//		else if (i < 0)
+//			i = lerp_styles_max - 1;
+//	}
+//
+//	Cvar_SetValue("r_lerpmodels", (float)i);
+//}
+
+/*
+================
+GL_Menu_Interpolation
+
+Both model and movement interpolation, Off > On (except flames) > On
+================
+*/
+static void GL_Menu_Interpolation(int dir)
+{
+	int i;
+
+	for (i = 0; i < lerp_styles_max; i++)
+	{
+		if (i == r_lerpmodels.value) {
+			break;
+		}
+	}
+
+	if (i == lerp_styles_max)
+	{
+		i = 0;
+	}
+	else
+	{
+		i += dir;
+		if (i >= lerp_styles_max)
+			i = 0;
+		else if (i < 0)
+			i = lerp_styles_max - 1;
+	}
+
+	Cvar_SetValue("r_lerpmodels", (float)i);
+	Cvar_SetValue("r_lerpmove", r_lerpmodels.value == 0 ? 0 : 1);
+}
+
 //==========================================================================
 //
-//  OPENGL GRAPHICS OPTIONS MENU
+//  OPENGL / GRAPHICS OPTIONS MENU
 //
 //==========================================================================
 
@@ -142,7 +221,9 @@ enum {
   GL_OPT_FILTER,
   GL_OPT_ANISOTROPY,
   GL_OPT_PARTICLES,
-  GL_OPTIONS_ITEMS
+	GL_OPT_LERP,
+	//GL_OPT_LERPMOVE,
+  GL_OPTIONS_ITEMS // This ends our list of menu items
 };
 
 static int gl_options_cursor = 0;
@@ -180,6 +261,12 @@ void GL_MenuKey(int key) {
 		case GL_OPT_PARTICLES:
 			GL_Menu_ParticleStyle(-1);
 			break;
+		case GL_OPT_LERP:
+			GL_Menu_Interpolation(-1);
+			break;
+		//case GL_OPT_LERPMOVE:
+		//	Cvar_Set("r_lerpmove", r_lerpmove.value ? "0" : "1");
+		//	break;
 		default:
 			break;
 		}
@@ -197,6 +284,12 @@ void GL_MenuKey(int key) {
 		case GL_OPT_PARTICLES:
 			GL_Menu_ParticleStyle(1);
 			break;
+		case GL_OPT_LERP:
+			GL_Menu_Interpolation(1);
+			break;
+		//case GL_OPT_LERPMOVE:
+		//	Cvar_Set("r_lerpmove", r_lerpmove.value ? "0" : "1");
+		//	break;
 		default:
 			break;
 		}
@@ -216,6 +309,12 @@ void GL_MenuKey(int key) {
 		case GL_OPT_PARTICLES:
 			GL_Menu_ParticleStyle(1);
 			break;
+		case GL_OPT_LERP:
+			GL_Menu_Interpolation(1);
+			break;
+		//case GL_OPT_LERPMOVE:
+		//	Cvar_Set("r_lerpmove", r_lerpmove.value ? "0" : "1");
+		//	break;
 		default:
 			break;
 		}
@@ -226,7 +325,7 @@ void GL_MenuKey(int key) {
 }
 
 void GL_MenuDraw(void) {
-	int i, y;
+	int i, v, y;
 	float r;
 	qpic_t *p;
 	const char *title;
@@ -250,21 +349,29 @@ void GL_MenuDraw(void) {
 	for (i = 0; i < GL_OPTIONS_ITEMS; i++) {
 		switch (i) {
 		case GL_OPT_FILTER:
-			M_Print(16, y, "     Filter mode");
+			M_Print(16, y, "       Filter mode");
 			M_Print(184, y, ("%s", Cvar_VariableString("gl_texturemode")));
 			break;
 		case GL_OPT_ANISOTROPY:
-			M_Print(16, y, "      Anisotropy");
+			M_Print(16, y, "        Anisotropy");
 			r = (float)Q_atof(Cvar_VariableString("gl_texture_anisotropy"));
 			M_DrawSlider(184, y, r);
 			// Not too clear on sliders yet
 			M_Print(280, y, ("%d", Cvar_VariableString("gl_texture_anisotropy")));
 			break;
 		case GL_OPT_PARTICLES:
-			M_Print(16, y, "       Particles");
-			int v = Q_atoi(Cvar_VariableString("r_particles"));
+			M_Print(16, y, "         Particles");
+			v = Q_atoi(Cvar_VariableString("r_particles"));
 			M_Print(184, y, ("%s", particle_styles[v]));
 			break;
+		case GL_OPT_LERP:
+			M_Print(16, y, "       Interpolate");
+			M_Print(184, y, lerp_styles[(int)r_lerpmodels.value]);
+			break;
+		//case GL_OPT_LERPMOVE:
+		//	M_Print(16, y, "       Smooth Move");
+		//	M_Print(184, y, r_lerpmove.value == 0 ? "No" : "Yes");
+		//	break;
 		}
 
 		if (gl_options_cursor == i)

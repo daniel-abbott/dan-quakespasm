@@ -2,6 +2,7 @@
 Copyright (C) 1996-2001 Id Software, Inc.
 Copyright (C) 2002-2009 John Fitzgibbons and others
 Copyright (C) 2010-2014 QuakeSpasm developers
+Copyright (C) 2020 Daniel Abbott
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -57,7 +58,6 @@ mleaf_t		*r_viewleaf, *r_oldviewleaf;
 
 int		d_lightstylevalue[256];	// 8.8 fraction of base light value
 
-
 cvar_t	r_norefresh = {"r_norefresh","0",CVAR_NONE};
 cvar_t	r_drawentities = {"r_drawentities","1",CVAR_NONE};
 cvar_t	r_drawviewmodel = {"r_drawviewmodel","1",CVAR_NONE};
@@ -66,7 +66,6 @@ cvar_t	r_pos = {"r_pos","0",CVAR_NONE};
 cvar_t	r_fullbright = {"r_fullbright","0",CVAR_NONE};
 cvar_t	r_lightmap = {"r_lightmap","0",CVAR_NONE};
 cvar_t	r_shadows = {"r_shadows","0",CVAR_ARCHIVE};
-cvar_t	r_wateralpha = {"r_wateralpha","1",CVAR_ARCHIVE};
 cvar_t	r_dynamic = {"r_dynamic","1",CVAR_ARCHIVE};
 cvar_t	r_novis = {"r_novis","0",CVAR_ARCHIVE};
 
@@ -94,16 +93,17 @@ cvar_t	r_oldskyleaf = {"r_oldskyleaf", "0", CVAR_NONE};
 cvar_t	r_drawworld = {"r_drawworld", "1", CVAR_NONE};
 cvar_t	r_showtris = {"r_showtris", "0", CVAR_NONE};
 cvar_t	r_showbboxes = {"r_showbboxes", "0", CVAR_NONE};
-cvar_t	r_lerpmodels = {"r_lerpmodels", "1", CVAR_NONE};
-cvar_t	r_lerpmove = {"r_lerpmove", "1", CVAR_NONE};
+cvar_t	r_lerpmodels = {"r_lerpmodels", "1", CVAR_ARCHIVE};
+cvar_t	r_lerpmove = {"r_lerpmove", "1", CVAR_ARCHIVE};
 cvar_t	r_nolerp_list = {"r_nolerp_list", "progs/flame.mdl,progs/flame2.mdl,progs/braztall.mdl,progs/brazshrt.mdl,progs/longtrch.mdl,progs/flame_pyre.mdl,progs/v_saw.mdl,progs/v_xfist.mdl,progs/h2stuff/newfire.mdl", CVAR_NONE};
 cvar_t	r_noshadow_list = {"r_noshadow_list", "progs/flame2.mdl,progs/flame.mdl,progs/bolt1.mdl,progs/bolt2.mdl,progs/bolt3.mdl,progs/laser.mdl", CVAR_NONE};
 
 extern cvar_t	r_vfog;
 //johnfitz
 
-cvar_t	gl_zfix = {"gl_zfix", "0", CVAR_NONE}; // QuakeSpasm z-fighting fix
+cvar_t	gl_zfix = {"gl_zfix", "1", CVAR_ARCHIVE}; // QuakeSpasm z-fighting fix
 
+cvar_t	r_wateralpha = { "r_wateralpha","1",CVAR_NONE };
 cvar_t	r_lavaalpha = {"r_lavaalpha","0",CVAR_NONE};
 cvar_t	r_telealpha = {"r_telealpha","0",CVAR_NONE};
 cvar_t	r_slimealpha = {"r_slimealpha","0",CVAR_NONE};
@@ -962,7 +962,7 @@ R_ScaleView
 The r_scale cvar allows rendering the 3D view at 1/2, 1/3, or 1/4 resolution.
 This function scales the reduced resolution 3D view back up to fill 
 r_refdef.vrect. This is for emulating a low-resolution pixellated look,
-or possibly as a perforance boost on slow graphics cards.
+or possibly as a performance boost on slow graphics cards.
 ================
 */
 void R_ScaleView (void)
@@ -972,7 +972,7 @@ void R_ScaleView (void)
 	int srcx, srcy, srcw, srch;
 
 	// copied from R_SetupGL()
-	scale = CLAMP(1, (int)r_scale.value, 4);
+	scale = CLAMP(1, (int)r_scale.value, 8);
 	srcx = glx + r_refdef.vrect.x;
 	srcy = gly + glheight - r_refdef.vrect.y - r_refdef.vrect.height;
 	srcw = r_refdef.vrect.width / scale;
