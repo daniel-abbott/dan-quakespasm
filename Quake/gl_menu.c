@@ -355,8 +355,7 @@ void GL_MenuDraw(void) {
 		case GL_OPT_ANISOTROPY:
 			M_Print(16, y, "        Anisotropy");
 			r = (float)Q_atof(Cvar_VariableString("gl_texture_anisotropy"));
-			M_DrawSlider(184, y, r);
-			// Not too clear on sliders yet
+			M_DrawSlider(184, y, (r == 1 ? 0 : r * 0.1f));
 			M_Print(280, y, ("%d", Cvar_VariableString("gl_texture_anisotropy")));
 			break;
 		case GL_OPT_PARTICLES:
