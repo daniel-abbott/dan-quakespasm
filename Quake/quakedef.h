@@ -3,6 +3,7 @@ Copyright (C) 1996-2001 Id Software, Inc.
 Copyright (C) 2002-2009 John Fitzgibbons and others
 Copyright (C) 2007-2008 Kristian Duske
 Copyright (C) 2010-2019 QuakeSpasm developers
+Copyright (C) 2020 Daniel Abbott
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -42,11 +43,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define	QUAKESPASM_VER_SUFFIX		// optional version suffix string literal like "-beta1"
 #endif
 
+#define DANQUAKE_VERSION_MAJOR 0
+#define DANQUAKE_VERSION_MINOR 01
+
 #define	QS_STRINGIFY_(x)	#x
 #define	QS_STRINGIFY(x)	QS_STRINGIFY_(x)
 
 // combined version string like "0.92.1-beta1"
 #define	QUAKESPASM_VER_STRING	QS_STRINGIFY(QUAKESPASM_VERSION) "." QS_STRINGIFY(QUAKESPASM_VER_PATCH) QUAKESPASM_VER_SUFFIX
+#define DANQUAKE_VER_STRING QS_STRINGIFY(DANQUAKE_VERSION_MAJOR) "." QS_STRINGIFY(DANQUAKE_VERSION_MINOR)
 
 //define	PARANOID			// speed sapping error checking
 

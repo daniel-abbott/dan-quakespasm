@@ -231,7 +231,8 @@ void	Host_FindMaxClients (void)
 void Host_Version_f (void)
 {
 	Con_Printf ("Quake Version %1.2f\n", VERSION);
-	Con_Printf ("QuakeSpasm Version " QUAKESPASM_VER_STRING "\n");
+	// Con_Printf ("QuakeSpasm Version " QUAKESPASM_VER_STRING "\n");
+	Con_Printf("DanQuake Version " DANQUAKE_VER_STRING "\n");
 	Con_Printf ("Exe: " __TIME__ " " __DATE__ "\n");
 }
 

@@ -1694,8 +1694,8 @@ qboolean M_Quit_TextEntry (void)
 void M_Quit_Draw (void) //johnfitz -- modified for new quit message
 {
 	char	msg1[40];
-	char	msg2[] = "by Ozkan Sezer, Eric Wasylishen, others";/* msg2/msg3 are mostly [40] */
-	char	msg3[] = "Press y to quit";
+	char	msg2[] = "by Dan Abbott, based on QuakeSpasm";/* msg2/msg3 are mostly [40] */
+	char	msg3[] = "Press Y to quit";
 	int		boxlen;
 
 	if (wasInMenus)
@@ -1706,7 +1706,8 @@ void M_Quit_Draw (void) //johnfitz -- modified for new quit message
 		m_state = m_quit;
 	}
 
-	sprintf(msg1, "QuakeSpasm " QUAKESPASM_VER_STRING);
+	// sprintf(msg1, "QuakeSpasm " QUAKESPASM_VER_STRING);
+	sprintf(msg1, "DanQuake " DANQUAKE_VER_STRING);
 
 	//okay, this is kind of fucked up.  M_DrawTextBox will always act as if
 	//width is even. Also, the width and lines values are for the interior of the box,
