@@ -902,9 +902,18 @@ SV_Physics_Client
 Player character actions
 ================
 */
+#ifdef GLOBOT
+void BotPreFrame(client_t *client);
+void BotPostFrame(client_t *client);
+#endif
+
 void SV_Physics_Client (edict_t	*ent, int num)
 {
-	if ( ! svs.clients[num-1].active )
+#ifdef GLOBOT
+	if (!svs.clients[num - 1].active && !ent->bot.Active)
+#else
+	if (!svs.clients[num - 1].active)
+#endif
 		return;		// unconnected slot
 
 //
@@ -914,6 +923,10 @@ void SV_Physics_Client (edict_t	*ent, int num)
 	pr_global_struct->self = EDICT_TO_PROG(ent);
 	PR_ExecuteProgram (pr_global_struct->PlayerPreThink);
 
+#ifdef GLOBOT
+	if (ent->bot.isbot)
+		BotPreFrame(&svs.clients[num - 1]);
+#endif
 //
 // do a move
 //
@@ -967,6 +980,11 @@ void SV_Physics_Client (edict_t	*ent, int num)
 	pr_global_struct->time = sv.time;
 	pr_global_struct->self = EDICT_TO_PROG(ent);
 	PR_ExecuteProgram (pr_global_struct->PlayerPostThink);
+
+#ifdef GLOBOT
+	if (ent->bot.isbot)
+		BotPostFrame(&svs.clients[num - 1]);
+#endif
 }
 
 //============================================================================

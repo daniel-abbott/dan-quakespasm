@@ -338,6 +338,13 @@ static void PF_sprint (void)
 	char		*s;
 	client_t	*client;
 	int	entnum;
+#ifdef GLOBOT
+	edict_t		*ent;
+	ent = G_EDICT(OFS_PARM0);
+
+	if (!ent->bot.isbot)
+	{
+#endif
 
 	entnum = G_EDICTNUM(OFS_PARM0);
 	s = PF_VarString(1);
@@ -352,6 +359,9 @@ static void PF_sprint (void)
 
 	MSG_WriteChar (&client->message,svc_print);
 	MSG_WriteString (&client->message, s );
+#ifdef GLOBOT
+	}
+#endif
 }
 
 
@@ -369,6 +379,14 @@ static void PF_centerprint (void)
 	char		*s;
 	client_t	*client;
 	int	entnum;
+#ifdef GLOBOT
+	edict_t		*ent;
+	ent = G_EDICT(OFS_PARM0);
+
+	if (!ent->bot.isbot)
+	{
+
+#endif
 
 	entnum = G_EDICTNUM(OFS_PARM0);
 	s = PF_VarString(1);
@@ -383,6 +401,9 @@ static void PF_centerprint (void)
 
 	MSG_WriteChar (&client->message,svc_centerprint);
 	MSG_WriteString (&client->message, s);
+#ifdef GLOBOT
+	}
+#endif
 }
 
 
@@ -871,6 +892,15 @@ static void PF_stuffcmd (void)
 	int		entnum;
 	const char	*str;
 	client_t	*old;
+#ifdef GLOBOT
+	edict_t		*ent;
+	static qboolean	next_is_value;
+	ent = G_EDICT(OFS_PARM0);
+	next_is_value = false;
+	if (!ent->bot.isbot)
+	{
+
+#endif
 
 	entnum = G_EDICTNUM(OFS_PARM0);
 	if (entnum < 1 || entnum > svs.maxclients)
@@ -881,6 +911,56 @@ static void PF_stuffcmd (void)
 	host_client = &svs.clients[entnum-1];
 	Host_ClientCommands ("%s", str);
 	host_client = old;
+#ifdef GLOBOT
+	}
+	// MAD UGLY HACK TO GET TEAM FORTRESS TO WORK WITH GLOBOT
+	else
+	{
+		str = G_STRING(OFS_PARM1);
+
+		if (str[0] == 'c' &&
+			str[1] == 'o' &&
+			str[2] == 'l' &&
+			str[3] == 'o' &&
+			str[4] == 'r')
+		{
+			next_is_value = true;
+			return;
+		}
+		else if (next_is_value)
+		{
+			int		value;
+
+			Con_Printf(str);
+
+			next_is_value = false;
+
+			entnum = G_EDICTNUM(OFS_PARM0);
+			old = &svs.clients[entnum - 1];
+
+			if (str[0] == '4')
+				value = 4;
+			else if (str[0] == '1' && str[1] == '1')
+				value = 11;
+			else if (str[0] == '1' && str[1] == '2')
+				value = 12;
+			else if (str[0] == '1' && str[1] == '3')
+				value = 13;
+			else
+				return;
+
+			old->colors = value * 16 + value;
+			old->edict->v.team = value + 1;
+
+			// send notification to all clients
+			MSG_WriteByte(&sv.reliable_datagram, svc_updatecolors);
+			MSG_WriteByte(&sv.reliable_datagram, old - svs.clients);
+			MSG_WriteByte(&sv.reliable_datagram, old->colors);
+		}
+	}
+	// MAD UGLY HACK TO GET TEAM FORTRESS TO WORK WITH GLOBOT
+
+#endif
 }
 
 /*
@@ -1510,41 +1590,89 @@ static sizebuf_t *WriteDest (void)
 
 static void PF_WriteByte (void)
 {
+#ifdef GLOBOT
+	edict_t	*ent = PROG_TO_EDICT(pr_global_struct->msg_entity);
+
+	if (G_FLOAT(OFS_PARM0) == MSG_ONE && ent->bot.isbot)
+		return;
+#endif
 	MSG_WriteByte (WriteDest(), G_FLOAT(OFS_PARM1));
 }
 
 static void PF_WriteChar (void)
 {
+#ifdef GLOBOT
+	edict_t	*ent = PROG_TO_EDICT(pr_global_struct->msg_entity);
+
+	if (G_FLOAT(OFS_PARM0) == MSG_ONE && ent->bot.isbot)
+		return;
+#endif
 	MSG_WriteChar (WriteDest(), G_FLOAT(OFS_PARM1));
 }
 
 static void PF_WriteShort (void)
 {
+#ifdef GLOBOT
+	edict_t	*ent = PROG_TO_EDICT(pr_global_struct->msg_entity);
+
+	if (G_FLOAT(OFS_PARM0) == MSG_ONE && ent->bot.isbot)
+		return;
+#endif
 	MSG_WriteShort (WriteDest(), G_FLOAT(OFS_PARM1));
 }
 
 static void PF_WriteLong (void)
 {
+#ifdef GLOBOT
+	edict_t	*ent = PROG_TO_EDICT(pr_global_struct->msg_entity);
+
+	if (G_FLOAT(OFS_PARM0) == MSG_ONE && ent->bot.isbot)
+		return;
+#endif
 	MSG_WriteLong (WriteDest(), G_FLOAT(OFS_PARM1));
 }
 
 static void PF_WriteAngle (void)
 {
+#ifdef GLOBOT
+	edict_t	*ent = PROG_TO_EDICT(pr_global_struct->msg_entity);
+
+	if (G_FLOAT(OFS_PARM0) == MSG_ONE && ent->bot.isbot)
+		return;
+#endif
 	MSG_WriteAngle (WriteDest(), G_FLOAT(OFS_PARM1), sv.protocolflags);
 }
 
 static void PF_WriteCoord (void)
 {
+#ifdef GLOBOT
+	edict_t	*ent = PROG_TO_EDICT(pr_global_struct->msg_entity);
+
+	if (G_FLOAT(OFS_PARM0) == MSG_ONE && ent->bot.isbot)
+		return;
+#endif
 	MSG_WriteCoord (WriteDest(), G_FLOAT(OFS_PARM1), sv.protocolflags);
 }
 
 static void PF_WriteString (void)
 {
+#ifdef GLOBOT
+	edict_t	*ent = PROG_TO_EDICT(pr_global_struct->msg_entity);
+
+	if (G_FLOAT(OFS_PARM0) == MSG_ONE && ent->bot.isbot)
+		return;
+#endif
 	MSG_WriteString (WriteDest(), G_STRING(OFS_PARM1));
 }
 
 static void PF_WriteEntity (void)
 {
+#ifdef GLOBOT
+	edict_t	*ent = PROG_TO_EDICT(pr_global_struct->msg_entity);
+
+	if (G_FLOAT(OFS_PARM0) == MSG_ONE && ent->bot.isbot)
+		return;
+#endif
 	MSG_WriteShort (WriteDest(), G_EDICTNUM(OFS_PARM1));
 }
 
@@ -1632,6 +1760,13 @@ static void PF_setspawnparms (void)
 	edict_t	*ent;
 	int		i;
 	client_t	*client;
+#ifdef GLOBOT
+	ent = G_EDICT(OFS_PARM0);
+
+	if (!ent->bot.isbot)
+	{
+
+#endif
 
 	ent = G_EDICT(OFS_PARM0);
 	i = NUM_FOR_EDICT(ent);
@@ -1643,6 +1778,9 @@ static void PF_setspawnparms (void)
 
 	for (i = 0; i < NUM_SPAWN_PARMS; i++)
 		(&pr_global_struct->parm1)[i] = client->spawn_parms[i];
+#ifdef GLOBOT
+	}
+#endif
 }
 
 /*

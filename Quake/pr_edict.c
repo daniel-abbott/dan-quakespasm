@@ -1034,6 +1034,9 @@ void ED_LoadFromFile (const char *data)
 		}
 
 		pr_global_struct->self = EDICT_TO_PROG(ent);
+#ifdef GLOBOT
+			BotInit();
+#endif
 		PR_ExecuteProgram (func - pr_functions);
 	}
 

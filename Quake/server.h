@@ -140,6 +140,9 @@ typedef struct client_s
 #define	DEAD_NO					0
 #define	DEAD_DYING				1
 #define	DEAD_DEAD				2
+#ifdef GLOBOT
+#define	DEAD_RESPAWNABLE		3
+#endif
 
 #define	DAMAGE_NO				0
 #define	DAMAGE_YES				1

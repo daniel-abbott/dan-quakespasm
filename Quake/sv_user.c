@@ -589,6 +589,28 @@ nextmsg:
 	return true;
 }
 
+#ifdef GLOBOT
+/*
+==================
+SV_RunBots
+==================
+*/
+void SV_RunBots(void)
+{
+	int	i;
+
+	for (i = 0, host_client = svs.clients; i < svs.maxclients; i++, host_client++)
+	{
+		if (!host_client->edict->bot.isbot)
+			continue;
+
+		sv_player = host_client->edict;
+
+		if (!sv.paused && (svs.maxclients > 1 || key_dest == key_game))
+			SV_ClientThink();
+	}
+}
+#endif
 
 /*
 ==================
@@ -623,5 +645,8 @@ void SV_RunClients (void)
 		if (!sv.paused && (svs.maxclients > 1 || key_dest == key_game) )
 			SV_ClientThink ();
 	}
+#ifdef GLOBOT
+	SV_RunBots();
+#endif
 }
 

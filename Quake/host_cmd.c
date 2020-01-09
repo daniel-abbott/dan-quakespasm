@@ -1744,6 +1744,10 @@ void Host_Begin_f (void)
 	}
 
 	host_client->spawned = true;
+
+#ifdef GLOBOT
+	host_client->edict->bot.Active = true;
+#endif
 }
 
 //===========================================================================

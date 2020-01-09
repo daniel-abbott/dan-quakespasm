@@ -243,6 +243,10 @@ void Host_Callback_Notify (cvar_t *var)
 		SV_BroadcastPrintf ("\"%s\" changed to \"%s\"\n", var->name, var->string);
 }
 
+#ifdef GLOBOT
+void Bot_Init(void);
+#endif
+
 /*
 =======================
 Host_InitLocal
@@ -840,6 +844,9 @@ void Host_Init (void)
 	Mod_Init ();
 	NET_Init ();
 	SV_Init ();
+#ifdef GLOBOT
+	Bot_Init();
+#endif
 
 	Con_Printf ("Exe: " __TIME__ " " __DATE__ "\n");
 	Con_Printf ("%4.1f megabyte heap\n", host_parms->memsize/ (1024*1024.0));
