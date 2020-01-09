@@ -2214,23 +2214,23 @@ void M_GameOptions_Draw (void)
 // line cursor
 	M_DrawCharacter (144, gameoptions_cursor_table[gameoptions_cursor], 12+((int)(realtime*4)&1));
 
-	if (m_serverInfoMessage)
-	{
-		if ((realtime - m_serverInfoMessageTime) < 5.0)
-		{
-			x = (320-26*8)/2;
-			M_DrawTextBox (x, 138, 24, 4);
-			x += 8;
-			M_Print (x, 146, "  More than 4 players   ");
-			M_Print (x, 154, " requires using command ");
-			M_Print (x, 162, "line parameters; please ");
-			M_Print (x, 170, "   see techinfo.txt.    ");
-		}
-		else
-		{
-			m_serverInfoMessage = false;
-		}
-	}
+	//if (m_serverInfoMessage)
+	//{
+	//	if ((realtime - m_serverInfoMessageTime) < 5.0)
+	//	{
+	//		x = (320-26*8)/2;
+	//		M_DrawTextBox (x, 138, 24, 4);
+	//		x += 8;
+	//		M_Print (x, 146, "  More than 4 players   ");
+	//		M_Print (x, 154, " requires using command ");
+	//		M_Print (x, 162, "line parameters; please ");
+	//		M_Print (x, 170, "   see techinfo.txt.    ");
+	//	}
+	//	else
+	//	{
+	//		m_serverInfoMessage = false;
+	//	}
+	//}
 }
 
 
