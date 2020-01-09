@@ -26,7 +26,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "quakedef.h"
 #include "cfgfile.h"
 
-extern cvar_t r_lerpmodels, r_lerpmove;
+extern cvar_t r_lerpmodels, r_lerpmove, r_scale;
+extern int R_MAX_SCALE_VALUE;
 
 static char* texture_filter_modes[] = {
 	"GL_NEAREST",
@@ -211,6 +212,25 @@ static void GL_Menu_Interpolation(int dir)
 	Cvar_SetValue("r_lerpmove", r_lerpmodels.value == 0 ? 0 : 1);
 }
 
+/*
+================
+GL_Menu_Anisotropy
+
+Select anisotropy mode with slider, 1-2-4-8-16
+================
+*/
+static void GL_Menu_RenderScale(int dir) {
+	int v = r_scale.value;
+
+	v += dir;
+
+	if (v < 1)
+		v = R_MAX_SCALE_VALUE;
+	if (v > R_MAX_SCALE_VALUE)
+		v = 1;
+	Cvar_SetValue("r_scale", v);
+}
+
 //==========================================================================
 //
 //  OPENGL / GRAPHICS OPTIONS MENU
@@ -222,7 +242,7 @@ enum {
   GL_OPT_ANISOTROPY,
   GL_OPT_PARTICLES,
 	GL_OPT_LERP,
-	//GL_OPT_LERPMOVE,
+	GL_OPT_RENDERSCALE,
   GL_OPTIONS_ITEMS // This ends our list of menu items
 };
 
@@ -264,9 +284,9 @@ void GL_MenuKey(int key) {
 		case GL_OPT_LERP:
 			GL_Menu_Interpolation(-1);
 			break;
-		//case GL_OPT_LERPMOVE:
-		//	Cvar_Set("r_lerpmove", r_lerpmove.value ? "0" : "1");
-		//	break;
+		case GL_OPT_RENDERSCALE:
+			GL_Menu_RenderScale(-1);
+			break;
 		default:
 			break;
 		}
@@ -287,9 +307,9 @@ void GL_MenuKey(int key) {
 		case GL_OPT_LERP:
 			GL_Menu_Interpolation(1);
 			break;
-		//case GL_OPT_LERPMOVE:
-		//	Cvar_Set("r_lerpmove", r_lerpmove.value ? "0" : "1");
-		//	break;
+		case GL_OPT_RENDERSCALE:
+			GL_Menu_RenderScale(1);
+			break;
 		default:
 			break;
 		}
@@ -312,9 +332,9 @@ void GL_MenuKey(int key) {
 		case GL_OPT_LERP:
 			GL_Menu_Interpolation(1);
 			break;
-		//case GL_OPT_LERPMOVE:
-		//	Cvar_Set("r_lerpmove", r_lerpmove.value ? "0" : "1");
-		//	break;
+		case GL_OPT_RENDERSCALE:
+			GL_Menu_RenderScale(1);
+			break;
 		default:
 			break;
 		}
@@ -367,10 +387,11 @@ void GL_MenuDraw(void) {
 			M_Print(16, y, "       Interpolate");
 			M_Print(184, y, lerp_styles[(int)r_lerpmodels.value]);
 			break;
-		//case GL_OPT_LERPMOVE:
-		//	M_Print(16, y, "       Smooth Move");
-		//	M_Print(184, y, r_lerpmove.value == 0 ? "No" : "Yes");
-		//	break;
+		case GL_OPT_RENDERSCALE:
+			M_Print(16, y, "      Render scale");
+			r = (float)r_scale.value;
+			M_DrawSlider(184, y, (r == 1 ? 0 : r * 0.1f));
+			M_Print(280, y, ("%d", r_scale.string));
 		}
 
 		if (gl_options_cursor == i)

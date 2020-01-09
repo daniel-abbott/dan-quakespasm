@@ -112,7 +112,9 @@ float	map_wateralpha, map_lavaalpha, map_telealpha, map_slimealpha;
 
 qboolean r_drawflat_cheatsafe, r_fullbright_cheatsafe, r_lightmap_cheatsafe, r_drawworld_cheatsafe; //johnfitz
 
+const int R_MAX_SCALE_VALUE = 8;
 cvar_t	r_scale = {"r_scale", "1", CVAR_ARCHIVE};
+
 
 //==============================================================================
 //
@@ -972,7 +974,7 @@ void R_ScaleView (void)
 	int srcx, srcy, srcw, srch;
 
 	// copied from R_SetupGL()
-	scale = CLAMP(1, (int)r_scale.value, 8);
+	scale = CLAMP(1, (int)r_scale.value, R_MAX_SCALE_VALUE);
 	srcx = glx + r_refdef.vrect.x;
 	srcy = gly + glheight - r_refdef.vrect.y - r_refdef.vrect.height;
 	srcw = r_refdef.vrect.width / scale;
