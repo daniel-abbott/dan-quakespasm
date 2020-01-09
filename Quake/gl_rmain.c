@@ -481,7 +481,7 @@ void R_SetupGL (void)
 	//johnfitz -- rewrote this section
 	glMatrixMode(GL_PROJECTION);
     glLoadIdentity ();
-	scale =  CLAMP(1, (int)r_scale.value, 4); // ericw -- see R_ScaleView
+	scale =  CLAMP(1, (int)r_scale.value, R_MAX_SCALE_VALUE); // ericw -- see R_ScaleView
 	glViewport (glx + r_refdef.vrect.x,
 				gly + glheight - r_refdef.vrect.y - r_refdef.vrect.height,
 				r_refdef.vrect.width / scale,
