@@ -26,7 +26,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "quakedef.h"
 #include "cfgfile.h"
 
-extern cvar_t r_lerpmodels, r_lerpmove, r_scale;
+extern cvar_t r_lerpmodels, r_lerpmove, r_scale, r_particles;
+extern cvar_t gl_texture_anisotropy, gl_texturemode;
 extern int R_MAX_SCALE_VALUE;
 
 static char* texture_filter_modes[] = {
@@ -69,7 +70,7 @@ static void GL_Menu_ChooseNextFilter(int dir)
 
 	for (i = 0; i < texture_filters_max; i++)
 	{
-		if (Q_strcmp(texture_filter_modes[i], Cvar_VariableString("gl_texturemode")) == 0) {
+		if (Q_strcmp(texture_filter_modes[i], gl_texturemode.string) == 0) {
 			break;
 		}
 	}
@@ -98,7 +99,7 @@ Select anisotropy mode with slider, 1-2-4-8-16
 ================
 */
 static void GL_Menu_Anisotropy(int dir) {
-	int v = Q_atoi(Cvar_VariableString("gl_texture_anisotropy"));
+	int v = (int)gl_texture_anisotropy.value;
 
 	v = (dir > 0) ? (v *= 2) : (v /= 2);
 
@@ -122,7 +123,7 @@ static void GL_Menu_ParticleStyle(int dir)
 	
 	for (i = 0; i < particle_styles_max; i++)
 	{
-		if (i == Q_atoi(Cvar_VariableString("r_particles"))) {
+		if (i == (int)r_particles.value) {
 			break;
 		}
 	}
@@ -220,7 +221,7 @@ Select anisotropy mode with slider, 1-2-4-8-16
 ================
 */
 static void GL_Menu_RenderScale(int dir) {
-	int v = r_scale.value;
+	int v = (int)r_scale.value;
 
 	v += dir;
 
@@ -370,17 +371,17 @@ void GL_MenuDraw(void) {
 		switch (i) {
 		case GL_OPT_FILTER:
 			M_Print(16, y, "       Filter mode");
-			M_Print(184, y, ("%s", Cvar_VariableString("gl_texturemode")));
+			M_Print(184, y, ("%s", gl_texturemode.string));
 			break;
 		case GL_OPT_ANISOTROPY:
 			M_Print(16, y, "        Anisotropy");
-			r = (float)Q_atof(Cvar_VariableString("gl_texture_anisotropy"));
+			r = gl_texture_anisotropy.value;
 			M_DrawSlider(184, y, (r == 1 ? 0 : r * 0.1f));
-			M_Print(280, y, ("%d", Cvar_VariableString("gl_texture_anisotropy")));
+			M_Print(280, y, ("%d", gl_texture_anisotropy.string));
 			break;
 		case GL_OPT_PARTICLES:
 			M_Print(16, y, "         Particles");
-			v = Q_atoi(Cvar_VariableString("r_particles"));
+			v = r_particles.value;
 			M_Print(184, y, ("%s", particle_styles[v]));
 			break;
 		case GL_OPT_LERP:
@@ -389,7 +390,7 @@ void GL_MenuDraw(void) {
 			break;
 		case GL_OPT_RENDERSCALE:
 			M_Print(16, y, "      Render scale");
-			r = (float)r_scale.value;
+			r = r_scale.value;
 			M_DrawSlider(184, y, (r == 1 ? 0 : r * 0.1f));
 			M_Print(280, y, ("%d", r_scale.string));
 		}
