@@ -65,7 +65,7 @@ cvar_t	gl_cshiftpercent_damage = {"gl_cshiftpercent_damage", "100", CVAR_NONE}; 
 cvar_t	gl_cshiftpercent_bonus = {"gl_cshiftpercent_bonus", "100", CVAR_NONE}; // QuakeSpasm
 cvar_t	gl_cshiftpercent_powerup = {"gl_cshiftpercent_powerup", "100", CVAR_NONE}; // QuakeSpasm
 
-cvar_t	r_viewmodel_quake = {"r_viewmodel_quake", "0", CVAR_ARCHIVE};
+cvar_t	r_viewmodel_quake = {"r_viewmodel_quake", "1", CVAR_ARCHIVE};
 
 float	v_dmg_time, v_dmg_roll, v_dmg_pitch;
 
