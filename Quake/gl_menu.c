@@ -215,9 +215,9 @@ static void GL_Menu_Interpolation(int dir)
 
 /*
 ================
-GL_Menu_Anisotropy
+GL_Menu_Scale
 
-Select anisotropy mode with slider, 1-2-4-8-16
+Slider to scale the render resolution down (more pixelated).
 ================
 */
 static void GL_Menu_RenderScale(int dir) {
