@@ -28,6 +28,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 extern cvar_t r_lerpmodels, r_lerpmove, r_scale, r_particles;
 extern cvar_t gl_texture_anisotropy, gl_texturemode;
+extern cvar_t v_gunkick;
+
 extern int R_MAX_SCALE_VALUE;
 
 static char* texture_filter_modes[] = {
@@ -57,6 +59,13 @@ static char* lerp_styles[] = {
 
 static int lerp_styles_max = (int)(sizeof lerp_styles / sizeof lerp_styles[0]);
 
+static char* kick_styles[] = {
+	"Off",
+	"Classic",
+	"Smooth"
+};
+
+static int kick_styles_max = (int)(sizeof kick_styles / sizeof kick_styles[0]);
 /*
 ================
 Gfx_Menu_ChooseNextFilter
@@ -215,6 +224,40 @@ static void Gfx_Menu_Interpolation(int dir)
 
 /*
 ================
+Gfx_Menu_GunKick
+
+View kick when firing, Off > Classic > Smooth
+================
+*/
+static void Gfx_Menu_GunKick(int dir)
+{
+	int i;
+
+	for (i = 0; i < kick_styles_max; i++)
+	{
+		if (i == v_gunkick.value) {
+			break;
+		}
+	}
+
+	if (i == kick_styles_max)
+	{
+		i = 0;
+	}
+	else
+	{
+		i += dir;
+		if (i >= kick_styles_max)
+			i = 0;
+		else if (i < 0)
+			i = kick_styles_max - 1;
+	}
+
+	Cvar_SetValue("v_gunkick", (float)i);
+}
+
+/*
+================
 Gfx_Menu_Scale
 
 Slider to scale the render resolution down (more pixelated).
@@ -243,6 +286,7 @@ enum {
   GFX_OPT_ANISOTROPY,
   GFX_OPT_PARTICLES,
 	GFX_OPT_LERP,
+	GFX_OPT_LERPKICK,
 	GFX_OPT_RENDERSCALE,
   GFX_OPTIONS_ITEMS // This ends our list of menu items
 };
@@ -285,6 +329,9 @@ void Gfx_MenuKey(int key) {
 		case GFX_OPT_LERP:
 			Gfx_Menu_Interpolation(-1);
 			break;
+		case GFX_OPT_LERPKICK:
+			Gfx_Menu_GunKick(-1);
+			break;
 		case GFX_OPT_RENDERSCALE:
 			Gfx_Menu_RenderScale(-1);
 			break;
@@ -307,6 +354,9 @@ void Gfx_MenuKey(int key) {
 			break;
 		case GFX_OPT_LERP:
 			Gfx_Menu_Interpolation(1);
+			break;
+		case GFX_OPT_LERPKICK:
+			Gfx_Menu_GunKick(1);
 			break;
 		case GFX_OPT_RENDERSCALE:
 			Gfx_Menu_RenderScale(1);
@@ -332,6 +382,9 @@ void Gfx_MenuKey(int key) {
 			break;
 		case GFX_OPT_LERP:
 			Gfx_Menu_Interpolation(1);
+			break;
+		case GFX_OPT_LERPKICK:
+			Gfx_Menu_GunKick(1);
 			break;
 		case GFX_OPT_RENDERSCALE:
 			Gfx_Menu_RenderScale(1);
@@ -376,7 +429,7 @@ void Gfx_MenuDraw(void) {
 		case GFX_OPT_ANISOTROPY:
 			M_Print(16, y, "        Anisotropy");
 			r = gl_texture_anisotropy.value;
-			M_DrawSlider(184, y, (r == 1 ? 0 : r * 0.1f));
+			M_DrawSlider(184, y, (r - 1) / (16 - 1));
 			M_Print(280, y, ("%d", gl_texture_anisotropy.string));
 			break;
 		case GFX_OPT_PARTICLES:
@@ -388,11 +441,16 @@ void Gfx_MenuDraw(void) {
 			M_Print(16, y, "       Interpolate");
 			M_Print(184, y, lerp_styles[(int)r_lerpmodels.value]);
 			break;
+		case GFX_OPT_LERPKICK:
+			M_Print(16, y, "       Recoil Kick");
+			M_Print(184, y, kick_styles[(int)v_gunkick.value]);
+			break;
 		case GFX_OPT_RENDERSCALE:
 			M_Print(16, y, "      Render scale");
 			r = r_scale.value;
-			M_DrawSlider(184, y, (r == 1 ? 0 : r * 0.1f));
+			M_DrawSlider(184, y, (r - 1) / (R_MAX_SCALE_VALUE - 1));
 			M_Print(280, y, ("%d", r_scale.string));
+			break;
 		}
 
 		if (gfx_options_cursor == i)
