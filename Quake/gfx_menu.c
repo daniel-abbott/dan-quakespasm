@@ -59,12 +59,12 @@ static int lerp_styles_max = (int)(sizeof lerp_styles / sizeof lerp_styles[0]);
 
 /*
 ================
-GL_Menu_ChooseNextFilter
+Gfx_Menu_ChooseNextFilter
 
 chooses next texture filtering mode in order, then updates gl_texturemode cvar
 ================
 */
-static void GL_Menu_ChooseNextFilter(int dir)
+static void Gfx_Menu_ChooseNextFilter(int dir)
 {
 	int i;
 
@@ -93,12 +93,12 @@ static void GL_Menu_ChooseNextFilter(int dir)
 
 /*
 ================
-GL_Menu_Anisotropy
+Gfx_Menu_Anisotropy
 
 Select anisotropy mode with slider, 1-2-4-8-16
 ================
 */
-static void GL_Menu_Anisotropy(int dir) {
+static void Gfx_Menu_Anisotropy(int dir) {
 	int v = (int)gl_texture_anisotropy.value;
 
 	v = (dir > 0) ? (v *= 2) : (v /= 2);
@@ -112,12 +112,12 @@ static void GL_Menu_Anisotropy(int dir) {
 
 /*
 ================
-GL_Menu_ParticleStyle
+Gfx_Menu_ParticleStyle
 
 chooses style of particles, none > smooth > classic (pixelated)
 ================
 */
-static void GL_Menu_ParticleStyle(int dir)
+static void Gfx_Menu_ParticleStyle(int dir)
 {
 	int i;
 	
@@ -146,12 +146,12 @@ static void GL_Menu_ParticleStyle(int dir)
 
 /*
 ================
-GL_Menu_LerpModels
+Gfx_Menu_LerpModels
 
 Model animation smoothing, Off > On (except flames) > On (all)
 ================
 */
-//static void GL_Menu_LerpModels(int dir)
+//static void Gfx_Menu_LerpModels(int dir)
 //{
 //	int i;
 //
@@ -180,12 +180,12 @@ Model animation smoothing, Off > On (except flames) > On (all)
 
 /*
 ================
-GL_Menu_Interpolation
+Gfx_Menu_Interpolation
 
 Both model and movement interpolation, Off > On (except flames) > On
 ================
 */
-static void GL_Menu_Interpolation(int dir)
+static void Gfx_Menu_Interpolation(int dir)
 {
 	int i;
 
@@ -215,12 +215,12 @@ static void GL_Menu_Interpolation(int dir)
 
 /*
 ================
-GL_Menu_Scale
+Gfx_Menu_Scale
 
 Slider to scale the render resolution down (more pixelated).
 ================
 */
-static void GL_Menu_RenderScale(int dir) {
+static void Gfx_Menu_RenderScale(int dir) {
 	int v = (int)r_scale.value;
 
 	v += dir;
@@ -239,17 +239,17 @@ static void GL_Menu_RenderScale(int dir) {
 //==========================================================================
 
 enum {
-  GL_OPT_FILTER,
-  GL_OPT_ANISOTROPY,
-  GL_OPT_PARTICLES,
-	GL_OPT_LERP,
-	GL_OPT_RENDERSCALE,
-  GL_OPTIONS_ITEMS // This ends our list of menu items
+  GFX_OPT_FILTER,
+  GFX_OPT_ANISOTROPY,
+  GFX_OPT_PARTICLES,
+	GFX_OPT_LERP,
+	GFX_OPT_RENDERSCALE,
+  GFX_OPTIONS_ITEMS // This ends our list of menu items
 };
 
-static int gl_options_cursor = 0;
+static int gfx_options_cursor = 0;
 
-void GL_MenuKey(int key) {
+void Gfx_MenuKey(int key) {
 	switch (key) {
 	case K_ESCAPE:
 	case K_BBUTTON:
@@ -258,35 +258,35 @@ void GL_MenuKey(int key) {
 
 	case K_UPARROW:
 		S_LocalSound("misc/menu1.wav");
-		gl_options_cursor--;
-		if (gl_options_cursor < 0)
-			gl_options_cursor = GL_OPTIONS_ITEMS - 1;
+		gfx_options_cursor--;
+		if (gfx_options_cursor < 0)
+			gfx_options_cursor = GFX_OPTIONS_ITEMS - 1;
 		break;
 
 	case K_DOWNARROW:
 		S_LocalSound("misc/menu1.wav");
-		gl_options_cursor++;
-		if (gl_options_cursor >= GL_OPTIONS_ITEMS)
-			gl_options_cursor = 0;
+		gfx_options_cursor++;
+		if (gfx_options_cursor >= GFX_OPTIONS_ITEMS)
+			gfx_options_cursor = 0;
 		break;
 
 	case K_LEFTARROW:
 		S_LocalSound("misc/menu3.wav");
-		switch (gl_options_cursor) {
-		case GL_OPT_FILTER:
-			GL_Menu_ChooseNextFilter(-1);
+		switch (gfx_options_cursor) {
+		case GFX_OPT_FILTER:
+			Gfx_Menu_ChooseNextFilter(-1);
 			break;
-		case GL_OPT_ANISOTROPY:
-			GL_Menu_Anisotropy(-1);
+		case GFX_OPT_ANISOTROPY:
+			Gfx_Menu_Anisotropy(-1);
 			break;
-		case GL_OPT_PARTICLES:
-			GL_Menu_ParticleStyle(-1);
+		case GFX_OPT_PARTICLES:
+			Gfx_Menu_ParticleStyle(-1);
 			break;
-		case GL_OPT_LERP:
-			GL_Menu_Interpolation(-1);
+		case GFX_OPT_LERP:
+			Gfx_Menu_Interpolation(-1);
 			break;
-		case GL_OPT_RENDERSCALE:
-			GL_Menu_RenderScale(-1);
+		case GFX_OPT_RENDERSCALE:
+			Gfx_Menu_RenderScale(-1);
 			break;
 		default:
 			break;
@@ -295,21 +295,21 @@ void GL_MenuKey(int key) {
 
 	case K_RIGHTARROW:
 		S_LocalSound("misc/menu3.wav");
-		switch (gl_options_cursor) {
-		case GL_OPT_FILTER:
-			GL_Menu_ChooseNextFilter(1);
+		switch (gfx_options_cursor) {
+		case GFX_OPT_FILTER:
+			Gfx_Menu_ChooseNextFilter(1);
 			break;
-		case GL_OPT_ANISOTROPY:
-			GL_Menu_Anisotropy(1);
+		case GFX_OPT_ANISOTROPY:
+			Gfx_Menu_Anisotropy(1);
 			break;
-		case GL_OPT_PARTICLES:
-			GL_Menu_ParticleStyle(1);
+		case GFX_OPT_PARTICLES:
+			Gfx_Menu_ParticleStyle(1);
 			break;
-		case GL_OPT_LERP:
-			GL_Menu_Interpolation(1);
+		case GFX_OPT_LERP:
+			Gfx_Menu_Interpolation(1);
 			break;
-		case GL_OPT_RENDERSCALE:
-			GL_Menu_RenderScale(1);
+		case GFX_OPT_RENDERSCALE:
+			Gfx_Menu_RenderScale(1);
 			break;
 		default:
 			break;
@@ -320,21 +320,21 @@ void GL_MenuKey(int key) {
 	case K_KP_ENTER:
 	case K_ABUTTON:
 		m_entersound = true;
-		switch (gl_options_cursor) {
-		case GL_OPT_FILTER:
-			GL_Menu_ChooseNextFilter(1);
+		switch (gfx_options_cursor) {
+		case GFX_OPT_FILTER:
+			Gfx_Menu_ChooseNextFilter(1);
 			break;
-		case GL_OPT_ANISOTROPY:
-			GL_Menu_Anisotropy(1);
+		case GFX_OPT_ANISOTROPY:
+			Gfx_Menu_Anisotropy(1);
 			break;
-		case GL_OPT_PARTICLES:
-			GL_Menu_ParticleStyle(1);
+		case GFX_OPT_PARTICLES:
+			Gfx_Menu_ParticleStyle(1);
 			break;
-		case GL_OPT_LERP:
-			GL_Menu_Interpolation(1);
+		case GFX_OPT_LERP:
+			Gfx_Menu_Interpolation(1);
 			break;
-		case GL_OPT_RENDERSCALE:
-			GL_Menu_RenderScale(1);
+		case GFX_OPT_RENDERSCALE:
+			Gfx_Menu_RenderScale(1);
 			break;
 		default:
 			break;
@@ -345,7 +345,7 @@ void GL_MenuKey(int key) {
 	}
 }
 
-void GL_MenuDraw(void) {
+void Gfx_MenuDraw(void) {
 	int i, v, y;
 	float r;
 	qpic_t *p;
@@ -367,42 +367,42 @@ void GL_MenuDraw(void) {
 
 	y += 16;
 
-	for (i = 0; i < GL_OPTIONS_ITEMS; i++) {
+	for (i = 0; i < GFX_OPTIONS_ITEMS; i++) {
 		switch (i) {
-		case GL_OPT_FILTER:
+		case GFX_OPT_FILTER:
 			M_Print(16, y, "       Filter mode");
 			M_Print(184, y, ("%s", gl_texturemode.string));
 			break;
-		case GL_OPT_ANISOTROPY:
+		case GFX_OPT_ANISOTROPY:
 			M_Print(16, y, "        Anisotropy");
 			r = gl_texture_anisotropy.value;
 			M_DrawSlider(184, y, (r == 1 ? 0 : r * 0.1f));
 			M_Print(280, y, ("%d", gl_texture_anisotropy.string));
 			break;
-		case GL_OPT_PARTICLES:
+		case GFX_OPT_PARTICLES:
 			M_Print(16, y, "         Particles");
 			v = r_particles.value;
 			M_Print(184, y, ("%s", particle_styles[v]));
 			break;
-		case GL_OPT_LERP:
+		case GFX_OPT_LERP:
 			M_Print(16, y, "       Interpolate");
 			M_Print(184, y, lerp_styles[(int)r_lerpmodels.value]);
 			break;
-		case GL_OPT_RENDERSCALE:
+		case GFX_OPT_RENDERSCALE:
 			M_Print(16, y, "      Render scale");
 			r = r_scale.value;
 			M_DrawSlider(184, y, (r == 1 ? 0 : r * 0.1f));
 			M_Print(280, y, ("%d", r_scale.string));
 		}
 
-		if (gl_options_cursor == i)
+		if (gfx_options_cursor == i)
 			M_DrawCharacter(168, y, 12 + ((int)(realtime * 4) & 1));
 		
 		y += 8;
 	}
 }
 
-void GL_Menu_f(void) {
+void Gfx_Menu_f(void) {
 	IN_Deactivate(modestate == MS_WINDOWED);
 	key_dest = key_menu;
 	m_state = m_gl_options;

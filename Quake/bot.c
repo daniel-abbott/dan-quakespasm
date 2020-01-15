@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 #include "quakedef.h"
+#ifdef GLOBOT
 #include "bot.h"
 
 globot_t	globot;	// This struct is used to store global stuff that aint client specific
@@ -638,3 +639,4 @@ void Bot_Init(void)
 {
 	Cmd_AddCommand("addbot", NextFreeClient);
 }
+#endif

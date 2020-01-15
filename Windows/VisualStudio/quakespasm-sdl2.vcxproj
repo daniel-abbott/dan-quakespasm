@@ -238,9 +238,9 @@ copy "$(SolutionDir)\..\SDL2\lib64\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="..\..\Quake\console.c" />
     <ClCompile Include="..\..\Quake\crc.c" />
     <ClCompile Include="..\..\Quake\cvar.c" />
+    <ClCompile Include="..\..\Quake\gfx_menu.c" />
     <ClCompile Include="..\..\Quake\gl_draw.c" />
     <ClCompile Include="..\..\Quake\gl_fog.c" />
-    <ClCompile Include="..\..\Quake\gl_menu.c" />
     <ClCompile Include="..\..\Quake\gl_mesh.c" />
     <ClCompile Include="..\..\Quake\gl_model.c" />
     <ClCompile Include="..\..\Quake\gl_refrag.c" />
@@ -317,8 +317,8 @@ copy "$(SolutionDir)\..\SDL2\lib64\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="..\..\Quake\crc.h" />
     <ClInclude Include="..\..\Quake\cvar.h" />
     <ClInclude Include="..\..\Quake\draw.h" />
+    <ClInclude Include="..\..\Quake\gfx_menu.h" />
     <ClInclude Include="..\..\Quake\glquake.h" />
-    <ClInclude Include="..\..\Quake\gl_menu.h" />
     <ClInclude Include="..\..\Quake\gl_model.h" />
     <ClInclude Include="..\..\Quake\gl_texmgr.h" />
     <ClInclude Include="..\..\Quake\gl_warp_sin.h" />

@@ -240,10 +240,10 @@
     <ClCompile Include="..\..\Quake\zone.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Quake\gl_menu.c">
+    <ClCompile Include="..\..\Quake\bot.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Quake\bot.c">
+    <ClCompile Include="..\..\Quake\gfx_menu.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -440,10 +440,10 @@
     <ClInclude Include="..\..\Quake\zone.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Quake\gl_menu.h">
+    <ClInclude Include="..\..\Quake\bot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Quake\bot.h">
+    <ClInclude Include="..\..\Quake\gfx_menu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

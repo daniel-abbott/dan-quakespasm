@@ -22,6 +22,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
-void GL_MenuKey(int key);
-void GL_MenuDraw(void);
-void GL_Menu_f(void);
+void Gfx_MenuKey(int key);
+void Gfx_MenuDraw(void);
+void Gfx_Menu_f(void);

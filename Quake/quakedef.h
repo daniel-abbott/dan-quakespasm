@@ -265,7 +265,7 @@ typedef struct
 #include "menu.h"
 #include "cdaudio.h"
 #include "glquake.h"
-#include "gl_menu.h"
+#include "gfx_menu.h"
 
 
 //=============================================================================
@@ -335,6 +335,10 @@ extern int		current_skill;	// skill level for currently loaded level (in case
 extern qboolean		isDedicated;
 
 extern int		minimum_memory;
+
+#ifdef GLOBOT
+void BotInit(void);
+#endif
 
 #endif	/* QUAKEDEFS_H */
 

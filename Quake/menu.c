@@ -44,7 +44,7 @@ void M_Menu_Main_f (void);
 	void M_Menu_Options_f (void);
 		void M_Menu_Keys_f (void);
 		void M_Menu_Video_f (void);
-		void GL_Menu_f(void);
+		void Gfx_Menu_f(void);
 	void M_Menu_Help_f (void);
 	void M_Menu_Quit_f (void);
 
@@ -62,7 +62,7 @@ void M_Main_Draw (void);
 	void M_Options_Draw (void);
 		void M_Keys_Draw (void);
 		void M_Video_Draw (void);
-		void GL_MenuDraw(void);
+		void Gfx_MenuDraw(void);
 	void M_Help_Draw (void);
 	void M_Quit_Draw (void);
 
@@ -80,7 +80,7 @@ void M_Main_Key (int key);
 	void M_Options_Key (int key);
 		void M_Keys_Key (int key);
 		void M_Video_Key (int key);
-		void GL_MenuKey(int key);
+		void Gfx_MenuKey(int key);
 	void M_Help_Key (int key);
 	void M_Quit_Key (int key);
 
@@ -998,7 +998,7 @@ enum
 //	OPT_USEMOUSE,
 //#endif
 	OPT_VIDEO,
-	OPT_GL_OPTIONS,	// This is the last before OPTIONS_ITEMS
+	OPT_GFX_OPTIONS,	// This is the last before OPTIONS_ITEMS
 	OPTIONS_ITEMS
 };
 
@@ -1259,8 +1259,8 @@ void M_Options_Draw (void)
 	if (vid_menudrawfn)
 		M_Print (16, 32 + 8*OPT_VIDEO,	"         Video Options");
 
-	if (GL_MenuDraw)
-		M_Print (16, 32 + 8 * OPT_GL_OPTIONS, "      Graphics Options");
+	if (Gfx_MenuDraw)
+		M_Print (16, 32 + 8 * OPT_GFX_OPTIONS, "      Graphics Options");
 // cursor
 	M_DrawCharacter (200, 32 + options_cursor*8, 12+((int)(realtime*4)&1));
 }
@@ -1299,8 +1299,8 @@ void M_Options_Key (int k)
 		case OPT_VIDEO:
 			M_Menu_Video_f ();
 			break;
-		case OPT_GL_OPTIONS:
-			GL_Menu_f();
+		case OPT_GFX_OPTIONS:
+			Gfx_Menu_f();
 			break;
 		default:
 			M_AdjustSliders (1);
@@ -2112,7 +2112,7 @@ int		gameoptions_cursor;
 void M_GameOptions_Draw (void)
 {
 	qpic_t	*p;
-	int		x;
+	//int		x;
 
 	M_DrawTransPic (16, 4, Draw_CachePic ("gfx/qplaque.lmp") );
 	p = Draw_CachePic ("gfx/p_multi.lmp");
@@ -2560,7 +2560,7 @@ void M_Init (void)
 	Cmd_AddCommand ("menu_options", M_Menu_Options_f);
 	Cmd_AddCommand ("menu_keys", M_Menu_Keys_f);
 	Cmd_AddCommand ("menu_video", M_Menu_Video_f);
-	Cmd_AddCommand ("menu_gl_options", GL_Menu_f);
+	Cmd_AddCommand ("menu_gl_options", Gfx_Menu_f);
 	Cmd_AddCommand ("help", M_Menu_Help_f);
 	Cmd_AddCommand ("menu_quit", M_Menu_Quit_f);
 }
@@ -2634,7 +2634,7 @@ void M_Draw (void)
 		break;
 
 	case m_gl_options:
-		GL_MenuDraw();
+		Gfx_MenuDraw();
 		break;
 
 	case m_help:
@@ -2726,7 +2726,7 @@ void M_Keydown (int key)
 		return;
 
 	case m_gl_options:
-		GL_MenuKey(key);
+		Gfx_MenuKey(key);
 		return;
 
 	case m_help:
