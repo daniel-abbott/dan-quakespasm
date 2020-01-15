@@ -442,7 +442,7 @@ void Gfx_MenuDraw(void) {
 			M_Print(184, y, lerp_styles[(int)r_lerpmodels.value]);
 			break;
 		case GFX_OPT_LERPKICK:
-			M_Print(16, y, "       Recoil Kick");
+			M_Print(16, y, "       Recoil kick");
 			M_Print(184, y, kick_styles[(int)v_gunkick.value]);
 			break;
 		case GFX_OPT_RENDERSCALE:
